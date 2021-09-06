@@ -1,272 +1,37 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  
-  
-  <title>Hexo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="数组 1、 基础用法1.1 声明数组语法格式 var variable_name [SIZE] variable_type  1.2 初始化数组var balance &#x3D; [5]float32&amp;#123;1000.0, 2.0, 3.4, 7.0, 50.0&amp;#125; 如果数组长度不确定，可以使用 … 代替数组的长度，编译器会根据元素个数自行推断数组的长度： 1var balance &#x3D; [..">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/2021/09/02/%E6%95%B0%E7%BB%84/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="数组 1、 基础用法1.1 声明数组语法格式 var variable_name [SIZE] variable_type  1.2 初始化数组var balance &#x3D; [5]float32&amp;#123;1000.0, 2.0, 3.4, 7.0, 50.0&amp;#125; 如果数组长度不确定，可以使用 … 代替数组的长度，编译器会根据元素个数自行推断数组的长度： 1var balance &#x3D; [..">
-<meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-09-02T15:38:04.340Z">
-<meta property="article:modified_time" content="2021-09-05T15:45:50.833Z">
-<meta property="article:author" content="John Doe">
-<meta name="twitter:card" content="summary">
-  
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
-  
-  
-    <link rel="shortcut icon" href="/favicon.png">
-  
-  
-    
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
-
-  
-  
-<link rel="stylesheet" href="/css/style.css">
-
-  
-    
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
-
-  
-<meta name="generator" content="Hexo 5.4.0"></head>
-
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Hexo</a>
-      </h1>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
-      </div>
-    </div>
-  </div>
-</header>
-
-      <div class="outer">
-        <section id="main"><article id="post-数组" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2021/09/02/%E6%95%B0%E7%BB%84/" class="article-date">
-  <time class="dt-published" datetime="2021-09-02T15:38:04.340Z" itemprop="datePublished">2021-09-02</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h1><hr>
-<h2 id="1、-基础用法"><a href="#1、-基础用法" class="headerlink" title="1、 基础用法"></a>1、 基础用法</h2><h3 id="1-1-声明数组"><a href="#1-1-声明数组" class="headerlink" title="1.1 声明数组"></a>1.1 声明数组</h3><p>语法格式</p>
-<p><code>var variable_name [SIZE] variable_type</code> </p>
-<h3 id="1-2-初始化数组"><a href="#1-2-初始化数组" class="headerlink" title="1.2 初始化数组"></a>1.2 初始化数组</h3><p><code>var balance = [5]float32&#123;1000.0, 2.0, 3.4, 7.0, 50.0&#125;</code> 如果数组长度不确定，可以使用 <strong>…</strong> 代替数组的长度，编译器会根据元素个数自行推断数组的长度：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var balance = [...]float32&#123;1000.0, 2.0, 3.4, 7.0, 50.0&#125;或balance := [...]float32&#123;1000.0, 2.0, 3.4, 7.0, 50.0&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果设置了数组的长度，我们还可以通过指定下标来初始化元素：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//  将索引为 1 和 3 的元素初始化balance := [5]float32&#123;1:2.0,3:7.0&#125;</span><br></pre></td></tr></table></figure>
-
-<p>初始化数组中 <strong>{}</strong> 中的元素个数不能大于 <strong>[]</strong> 中的数字。</p>
-<p>如果忽略 <strong>[]</strong> 中的数字不设置数组大小，Go 语言会根据元素的个数来设置数组的大小。</p>
-<h2 id="1-3-数组特点"><a href="#1-3-数组特点" class="headerlink" title="1.3 数组特点"></a>1.3 数组特点</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1. 数组：是同一种数据类型的固定长度的序列。</span><br><span class="line">2. 数组定义数组长度必须是常量，且是类型的组成部分。一旦定义，长度不能变。</span><br><span class="line">3. 长度是数组类型的一部分，因此，var a[5] int和var a[10]int是不同的类型。</span><br><span class="line">4. 访问越界，如果下标在数组合法范围之外，则触发访问越界，会panic</span><br><span class="line">5. 数组是值类型，赋值和传参会复制整个数组，而不是指针。因此改变副本的值，不会改变本身的值。</span><br><span class="line">6. 支持 &quot;==&quot;、&quot;!=&quot; 操作符。</span><br><span class="line">7.指针数组 [n]*T，数组指针 *[n]T。</span><br></pre></td></tr></table></figure>
+{% extends '_layout.swig' %}
+{% import '_macro/post.swig' as post_template %}
+{% import '_macro/sidebar.swig' as sidebar_template %}
 
 
+{% block title %}{{ page.title }} | {{ config.title }}{% endblock %}
 
-<h2 id="2、原理分析"><a href="#2、原理分析" class="headerlink" title="2、原理分析"></a>2、原理分析</h2><p>数组和切片是 Go 语言中常见的数据结构，很多刚刚解除 Go 的开发者往往会混淆这两个概念。数组作为最常见的集合在编程语言中是非常重要的，除了数组之外，Go 语言引入了另一个概念 —— 切片，切片与数组有一些类似，但是它们的不同导致了使用上的巨大差别。下面主要从编译期以及运行时分析一下数组的底层实现原理。</p>
-<h3 id="2-1-概述"><a href="#2-1-概述" class="headerlink" title="2.1 概述"></a>2.1 概述</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewArray</span><span class="params">(elem *Type, bound <span class="keyword">int64</span>)</span> *<span class="title">Type</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> bound &lt; <span class="number">0</span> &#123;</span><br><span class="line">		Fatalf(<span class="string">&quot;NewArray: invalid bound %v&quot;</span>, bound)</span><br><span class="line">	&#125;</span><br><span class="line">	t := New(TARRAY)</span><br><span class="line">	t.Extra = &amp;Array&#123;Elem: elem, Bound: bound&#125;</span><br><span class="line">	t.SetNotInHeap(elem.NotInHeap())</span><br><span class="line">	<span class="keyword">return</span> t</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>编译期间的数组类型是由上述的  <em>cmd/compile/internal/types.NewArray</em> 函数生成的，该类型包含两个字段，分别是元素类型 <code>Elem</code> 和数组的大小 <code>Bound</code>，这两个字段共同构成了数组类型，而当前数组是否应该在堆栈中初始化也在编译期就确定了。</p>
-<h3 id="2-2-初始化"><a href="#2-2-初始化" class="headerlink" title="2.2 初始化"></a>2.2 初始化</h3><p>Go 语言的数组有两种不同的创建方式，一种是显式的指定数组大小，另一种是使用 <code>[...]T</code> 声明数组，Go 语言会在编译期间通过源代码推导数组的大小：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a := [<span class="number">3</span>] <span class="keyword">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br><span class="line">b := [...] <span class="keyword">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这两种声明方式在运行期间得到的结果是完全相同的，后一种声明方式在编译期间就会被转换成前一种，这也就是编译器对数组大小的推导，下面我们来介绍编译器的推导过程。</p>
-<h4 id="上限推导"><a href="#上限推导" class="headerlink" title="上限推导"></a>上限推导</h4><p>两种不同的声明方式会导致编译器做出完全不同的处理，如果我们使用第一种方式 <code>[10]T</code>，那么变量的类型在编译进行到<a target="_blank" rel="noopener" href="https://draveness.me/golang/docs/part1-prerequisite/ch02-compile/golang-typecheck/">类型检查</a>阶段就会被提取出来，随后使用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/cmd/compile/internal/types.NewArray"><code>cmd/compile/internal/types.NewArray</code></a>创建包含数组大小的 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/cmd/compile/internal/types.Array"><code>cmd/compile/internal/types.Array</code></a> 结构体。</p>
-<p>当我们使用 <code>[...]T</code> 的方式声明数组时，编译器会在的 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/cmd/compile/internal/gc.typecheckcomplit"><code>cmd/compile/internal/gc.typecheckcomplit</code></a> 函数中对该数组的大小进行推导：</p>
-<p>这个删减后的 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/cmd/compile/internal/gc.typecheckcomplit"><code>cmd/compile/internal/gc.typecheckcomplit</code></a> 会调用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/cmd/compile/internal/gc.typecheckarraylit"><code>cmd/compile/internal/gc.typecheckarraylit</code></a> 通过遍历元素的方式来计算数组中元素的数量。</p>
-<p>所以我们可以看出 <code>[...]T&#123;1, 2, 3&#125;</code> 和 <code>[3]T&#123;1, 2, 3&#125;</code> 在运行时是完全等价的，<code>[...]T</code> 这种初始化方式也只是 Go 语言为我们提供的一种语法糖，当我们不想计算数组中的元素个数时可以通过这种方法减少一些工作量。</p>
-<h4 id="语句转换"><a href="#语句转换" class="headerlink" title="语句转换"></a>语句转换</h4><p>对于一个由字面量组成的数组，根据数组元素数量的不同，编译器会在负责初始化字面量的 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/cmd/compile/internal/gc.anylit"><code>cmd/compile/internal/gc.anylit</code></a> 函数中做两种不同的优化：</p>
-<ol>
-<li>当元素数量小于或者等于 4 个时，会直接将数组中的元素放置在栈上；</li>
-<li>当元素数量大于 4 个时，会将数组中的元素放置到静态区并在运行时取出；</li>
-</ol>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">anylit</span><span class="params">(n *Node, var_ *Node, init *Nodes)</span></span> &#123;</span><br></pre></td></tr></table></figure>
-
-<p>当数组的元素<strong>小于或者等于四个</strong>时，<a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/cmd/compile/internal/gc.fixedlit"><code>cmd/compile/internal/gc.fixedlit</code></a> 会负责在函数编译之前将 <code>[3]&#123;1, 2, 3&#125;</code> 转换成更加原始的语句：</p>
-<p>当数组中元素的个数小于或者等于四个并且 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/cmd/compile/internal/gc.fixedlit"><code>cmd/compile/internal/gc.fixedlit</code></a> 函数接收的 <code>kind</code> 是 <code>initKindLocalCode</code> 时，上述代码会将原有的初始化语句 <code>[3]int&#123;1, 2, 3&#125;</code> 拆分成一个声明变量的表达式和几个赋值表达式，这些表达式会完成对数组的初始化：</p>
-<p>但是如果当前数组的元素大于四个，<a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/cmd/compile/internal/gc.anylit"><code>cmd/compile/internal/gc.anylit</code></a> 会先获取一个唯一的 <code>staticname</code>，然后调用 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/cmd/compile/internal/gc.fixedlit"><code>cmd/compile/internal/gc.fixedlit</code></a> 函数在静态存储区初始化数组中的元素并将临时变量赋值给数组：</p>
-<p>假设代码需要初始化 <code>[5]int&#123;1, 2, 3, 4, 5&#125;</code>，那么我们可以将上述过程理解成以下的伪代码：</p>
-<p>总结起来，在不考虑逃逸分析的情况下，如果数组中元素的个数小于或者等于 4 个，那么所有的变量会直接在栈上初始化，如果数组元素大于 4 个，变量就会在静态存储区初始化然后拷贝到栈上，这些转换后的代码才会继续进入<a target="_blank" rel="noopener" href="https://draveness.me/golang/docs/part1-prerequisite/ch02-compile/golang-ir-ssa/">中间代码生成</a>和<a target="_blank" rel="noopener" href="https://draveness.me/golang/docs/part1-prerequisite/ch02-compile/golang-machinecode/">机器码生成</a>两个阶段，最后生成可以执行的二进制文件。</p>
-<h3 id="2-3-访问和赋值"><a href="#2-3-访问和赋值" class="headerlink" title="2.3 访问和赋值"></a>2.3 访问和赋值</h3><p>无论是在栈上还是静态存储区，数组在内存中都是一段连续的内存空间，我们通过指向数组开头的指针、元素的数量以及元素类型占的空间大小表示数组。如果我们不知道数组中元素的数量，访问时可能发生越界；而如果不知道数组中元素类型的大小，就没有办法知道应该一次取出多少字节的数据，无论丢失了哪个信息，我们都无法知道这片连续的内存空间到底存储了什么数据。</p>
-<p>数组访问越界是非常严重的错误，Go 语言中可以在编译期间的静态类型检查判断数组越界，<code>cmd/compile/internal/gc.typecheck1</code> 会验证访问数组的索引：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">typecheck1</span><span class="params">(n *Node, top <span class="keyword">int</span>)</span> <span class="params">(res *Node)</span></span> &#123;</span><br><span class="line">	<span class="keyword">switch</span> n.Op &#123;</span><br><span class="line">	<span class="keyword">case</span> OINDEX:</span><br><span class="line">		ok |= ctxExpr</span><br><span class="line">		l := n.Left  <span class="comment">// array</span></span><br><span class="line">		r := n.Right <span class="comment">// index</span></span><br><span class="line">		<span class="keyword">switch</span> n.Left.Type.Etype &#123;</span><br><span class="line">		<span class="keyword">case</span> TSTRING, TARRAY, TSLICE:</span><br><span class="line">			...</span><br><span class="line">			<span class="keyword">if</span> n.Right.Type != <span class="literal">nil</span> &amp;&amp; !n.Right.Type.IsInteger() &#123;</span><br><span class="line">				yyerror(<span class="string">&quot;non-integer array index %v&quot;</span>, n.Right)</span><br><span class="line">				<span class="keyword">break</span></span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> !n.Bounded() &amp;&amp; Isconst(n.Right, CTINT) &#123;</span><br><span class="line">				x := n.Right.Int64Val()</span><br><span class="line">				<span class="keyword">if</span> x &lt; <span class="number">0</span> &#123;</span><br><span class="line">					yyerror(<span class="string">&quot;invalid %s index %v (index must be non-negative)&quot;</span>, why, n.Right)</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> t.IsArray() &amp;&amp; x &gt;= t.NumElem() &#123;</span><br><span class="line">					yyerror(<span class="string">&quot;invalid array index %v (out of bounds for %d-element array)&quot;</span>, n.Right, t.NumElem())</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> Isconst(n.Left, CTSTR) &amp;&amp; x &gt;= <span class="keyword">int64</span>(<span class="built_in">len</span>(n.Left.StringVal())) &#123;</span><br><span class="line">					yyerror(<span class="string">&quot;invalid string index %v (out of bounds for %d-byte string)&quot;</span>, n.Right, <span class="built_in">len</span>(n.Left.StringVal()))</span><br><span class="line">				&#125; <span class="keyword">else</span> <span class="keyword">if</span> n.Right.Val().U.(*Mpint).Cmp(maxintval[TINT]) &gt; <span class="number">0</span> &#123;</span><br><span class="line">					yyerror(<span class="string">&quot;invalid %s index %v (index too large)&quot;</span>, why, n.Right)</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	...</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">访问数组的索引是非整数时，报错 “non-integer array index %v”；</span><br><span class="line">访问数组的索引是负数时，报错 “invalid array index %v (index must be non-negative)&quot;；</span><br><span class="line">访问数组的索引越界时，报错 “invalid array index %v (out of bounds for %d-element array)&quot;；</span><br></pre></td></tr></table></figure>
-
-<p>数组和字符串的一些简单越界错误都会在编译期间发现，例如：直接使用整数或者常量访问数组；但是如果使用变量去访问数组或者字符串时，编译器就无法提前发现错误，我们需要 Go 语言运行时阻止不合法的访问：</p>
-<p>Go 语言运行时在发现数组、切片和字符串的越界操作会由运行时的 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.panicIndex"><code>runtime.panicIndex</code></a> 和 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.goPanicIndex"><code>runtime.goPanicIndex</code></a> 触发程序的运行时错误并导致崩溃退出：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">JMP     398</span><br><span class="line">MOVL    $3, CX</span><br><span class="line">CALL    runtime.panicIndex(SB)</span><br><span class="line">XCHGL   AX, AX</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">TEXT runtime·panicIndex(SB),NOSPLIT,$<span class="number">0</span><span class="number">-16</span></span><br><span class="line">	MOVV	R1, x+<span class="number">0</span>(FP)</span><br><span class="line">	MOVV	R2, y+<span class="number">8</span>(FP)</span><br><span class="line">	JMP	runtime·goPanicIndex(SB)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">goPanicIndex</span><span class="params">(x <span class="keyword">int</span>, y <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">	panicCheck1(getcallerpc(), <span class="string">&quot;index out of range&quot;</span>)</span><br><span class="line">	<span class="built_in">panic</span>(boundsError&#123;x: <span class="keyword">int64</span>(x), signed: <span class="literal">true</span>, y: y, code: boundsIndex&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>当数组的访问操作 <code>OINDEX</code> 成功通过编译器的检查后，会被转换成几个 SSA 指令，假设我们有如下所示的 Go 语言代码，通过如下的方式进行编译会得到 ssa.html 文件：</p>
-<p><code>start</code> 阶段生成的 SSA 代码就是优化之前的第一版中间代码，下面展示的部分是 <code>elem := arr[i]</code> 对应的中间代码，在这段中间代码中我们发现 Go 语言为数组的访问操作生成了判断数组上限的指令 <code>IsInBounds</code> 以及当条件不满足时触发程序崩溃的 <code>PanicBounds</code> 指令：</p>
-<p>编译器会将 <code>PanicBounds</code> 指令转换成上面提到的 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.panicIndex"><code>runtime.panicIndex</code></a> 函数，当数组下标没有越界时，编译器会先获取数组的内存地址和访问的下标、利用 <code>PtrIndex</code> 计算出目标元素的地址，最后使用 <code>Load</code> 操作将指针中的元素加载到内存中。</p>
-<p>​    当然只有当编译器无法对数组下标是否越界无法做出判断时才会加入 <code>PanicBounds</code> 指令交给运行时进行判断，在使用字面量整数访问数组下标时会生成非常简单的中间代码，当我们将上述代码中的 <code>arr[i]</code> 改成 <code>arr[2]</code> 时，就会得到如下所示的代码：</p>
-<p>Go 语言对于数组的访问还是有着比较多的检查的，它不仅会在编译期间提前发现一些简单的越界错误并插入用于检测数组上限的函数调用，还会在运行期间通过插入的函数保证不会发生越界。</p>
-<p>数组的赋值和更新操作 <code>a[i] = 2</code> 也会生成 SSA 生成期间计算出数组当前元素的内存地址，然后修改当前内存地址的内容，这些赋值语句会被转换成如下所示的 SSA 代码：</p>
-<p>赋值的过程中会先确定目标数组的地址，再通过 <code>PtrIndex</code> 获取目标元素的地址，最后使用 <code>Store</code> 指令将数据存入地址中，从上面的这些 SSA 代码中我们可以看出 上述数组寻址和赋值都是在编译阶段完成的，没有运行时的参与。</p>
-<p>数组是 Go 语言中重要的数据结构，了解它的实现能够帮助我们更好地理解这门语言，通过对其实现的分析，我们知道了对数组的访问和赋值需要同时依赖编译器和运行时，它的大多数操作在<a target="_blank" rel="noopener" href="https://draveness.me/golang/docs/part1-prerequisite/ch02-compile/golang-compile-intro/">编译期间</a>都会转换成直接读写内存，在中间代码生成期间，编译器还会插入运行时方法 <a target="_blank" rel="noopener" href="https://draveness.me/golang/tree/runtime.panicIndex"><code>runtime.panicIndex</code></a> 调用防止发生越界错误。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/09/02/%E6%95%B0%E7%BB%84/" data-id="ckt7etr5z0001a0rc7lsz1k17" data-title="" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-    
-<nav id="article-nav">
-  
-    <a href="/2021/09/05/hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          GitHub+Hexo 快速搭建个人博客
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2021/09/01/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Hello World</div>
-    </a>
-  
-</nav>
-
-  
-</article>
+{% block page_class %}page-post-detail{% endblock %}
 
 
-</section>
-        
-          <aside id="sidebar">
-  
-    
+{% block content %}
 
-  
-    
+  <div id="posts" class="posts-expand">
+    {{ post_template.render(page) }}
 
-  
-    
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/09/">September 2021</a></li></ul>
+    <div class="post-spread">
+      {% if theme.jiathis %}
+        {% include '_partials/share/jiathis.swig' %}
+      {% elseif theme.baidushare %}
+        {% include '_partials/share/baidushare.swig' %}
+      {% elseif theme.add_this_id %}
+        {% include '_partials/share/add-this.swig' %}
+      {% elseif theme.duoshuo_shortname and theme.duoshuo_share %}
+        {% include '_partials/share/duoshuo_share.swig' %}
+      {% endif %}
     </div>
   </div>
 
+{% endblock %}
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2021/09/05/hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/">GitHub+Hexo 快速搭建个人博客</a>
-          </li>
-        
-          <li>
-            <a href="/2021/09/02/%E6%95%B0%E7%BB%84/">(no title)</a>
-          </li>
-        
-          <li>
-            <a href="/2021/09/01/hello-world/">Hello World</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
+{% block sidebar %}
+  {{ sidebar_template.render(true) }}
+{% endblock %}
 
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      
-      &copy; 2021 John Doe<br>
-      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
-
-
-<script src="/js/jquery-3.4.1.min.js"></script>
-
-
-
-  
-<script src="/fancybox/jquery.fancybox.min.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-
-  </div>
-</body>
-</html>
+{% block script_extra %}
+  {% include '_scripts/pages/post-details.swig' %}
+{% endblock %}
