@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="切片（slice） go 语言的奇妙之旅第一站：深入理解slice。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="slice">
+<meta property="og:url" content="http://example.com/2021/09/07/slice/index.html">
+<meta property="og:site_name" content="坨坨和美美">
+<meta property="og:description" content="切片（slice） go 语言的奇妙之旅第一站：深入理解slice。">
+<meta property="og:locale">
+<meta property="article:published_time" content="2021-09-07T13:38:12.000Z">
+<meta property="article:modified_time" content="2021-09-08T15:44:50.706Z">
+<meta property="article:author" content="Mr Wang">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://example.com/2021/09/07/slice/"/>
+
+
+
+
+
+  <title>slice | 坨坨和美美</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">坨坨和美美</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/07/slice/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="坨坨和美美">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">slice</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-09-07T21:38:12+08:00">
+                2021-09-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/09/07/slice/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2021/09/07/slice/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="切片（slice）"><a href="#切片（slice）" class="headerlink" title="切片（slice）"></a>切片（slice）</h1><hr>
+<p>go 语言的奇妙之旅第一站：深入理解slice。</p>
+<span id="more"></span>
+
+<h2 id="1、基础用法"><a href="#1、基础用法" class="headerlink" title="1、基础用法"></a>1、基础用法</h2><ul>
+<li><p>定义切片</p>
+<p>你可以声明一个未指定大小的数组来定义切片</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> identifier []<span class="keyword">type</span></span><br></pre></td></tr></table></figure>
+
+<p>或者使用 <code>make()</code> 函数来创建切片。</p>
+</li>
+<li><p>初始化</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1、通过下标的方式获取数组或切片的一部分</span></span><br><span class="line">s := arr[<span class="number">0</span>,<span class="number">3</span>] 或 s := slice[<span class="number">0</span>,<span class="number">3</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2、使用字面量初始化新的切片</span></span><br><span class="line">s := []<span class="keyword">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3、使用 make 创建切片</span></span><br><span class="line">s := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">10</span>)</span><br></pre></td></tr></table></figure></li>
+<li><p><code>len()</code> 和 <code>cap()</code></p>
+<p>通过 <code>len()</code> 方法获取切片的长度。</p>
+<p>通过 <code>cap()</code>  方法获取切片的容量。</p>
+</li>
+<li><p>空切片(nil)</p>
+<p>一个切片在未初始化之前默认为 <code>nil</code></p>
+</li>
+<li><p>切片截取</p>
+<p>可以通过设置下限及上限来设置截取切片  <code>[lower-bound:upper-bound]</code></p>
+</li>
+<li><p><code>append()</code> 和 <code>copy()</code></p>
+<p><code>append()</code>向切片中追加元素，如果元素数量大于切片的容量则会发生扩容。</p>
+<p><code>copy()</code> 切片拷贝。</p>
+</li>
+</ul>
+<h2 id="2、数据结构"><a href="#2、数据结构" class="headerlink" title="2、数据结构"></a>2、数据结构</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">我们看一下slice的数据结构，运行时切片可以由 reflect.SliceHeader 结构体表示，其中：</span><br><span class="line">- Data: 指向数组的指针</span><br><span class="line">- Len: 当前切片的长度</span><br><span class="line">- Cap: 当前切片的容量，即当前<span class="string">`data`</span>数组的大小</span><br><span class="line"><span class="keyword">type</span> SliceHeader <span class="keyword">struct</span> &#123;</span><br><span class="line">	Data <span class="keyword">uintptr</span></span><br><span class="line">	Len  <span class="keyword">int</span></span><br><span class="line">	Cap  <span class="keyword">int</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>切片和数组的关系非常密切，切片引入了一个抽象层，提供了对数组中部分连续片段的引用，提供了长度和容量这两个属性，作为数组的引用我们可以在运行时修改它的长度和范围。当切片的底层数组长度不够时就会触发扩容，底层数组指针指向的数组发生变化，但是对上层来说切片是没有变化的。</p>
+<h2 id="3、初始化"><a href="#3、初始化" class="headerlink" title="3、初始化"></a>3、初始化</h2><p><code>go</code> 语言中切片有三种初始化的方法：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1、通过下标的方式获取数组或切片的一部分</span></span><br><span class="line">s := arr[<span class="number">0</span>,<span class="number">3</span>] 或 s := slice[<span class="number">0</span>,<span class="number">3</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2、使用字面量初始化新的切片</span></span><br><span class="line">s := []<span class="keyword">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3、使用 make 创建切片</span></span><br><span class="line">s := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>下标</p>
+<p>使用下标创建切片是最原始也最接近汇编语言的方式，它是所有方法中最为底层的一种，编译器会将 <code>arr[0:3]</code> 或者 <code>slice[0:3]</code> 等语句转换成 <code>OpSliceMake</code> 操作，需要注意的是使用下标初始化切片不会拷贝原数组或者原切片中的数据，它只会创建一个指向原数组的切片结构体，所以修改新切片的数据也会修改原切片。</p>
+</li>
+<li><p>字面量</p>
+<ol>
+<li>根据切片中的元素数量对底层数组的大小进行推断并创建一个数组；</li>
+<li>将这些字面量元素存储到初始化的数组中；</li>
+<li>创建一个同样的数组指针；</li>
+<li>将静态存储区的数组 <code>vstat</code> 赋值给 <code>vauto</code> 指针所在的地址；</li>
+<li>通过 <code>[:]</code> 操作获取一个底层使用 <code>vauto</code> 的切片；</li>
+</ol>
+</li>
+<li><p><code>make()</code></p>
+</li>
+</ul>
+<h2 id="4、访问元素"><a href="#4、访问元素" class="headerlink" title="4、访问元素"></a>4、访问元素</h2><p>使用 <code>len</code> 和 <code>cap</code> 获取长度或者容量是切片最常见的操作，编译器将这它们看成两种特殊操作，即 <code>OLEN</code> 和 <code>OCAP</code>，函数会在 <code>SSA 生成阶段</code>将它们分别转换成 <code>OpSliceLen</code> 和 <code>OpSliceCap</code>：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *state)</span> <span class="title">expr</span><span class="params">(n *Node)</span> *<span class="title">ssa</span>.<span class="title">Value</span></span> &#123;</span><br><span class="line">	<span class="keyword">switch</span> n.Op &#123;</span><br><span class="line">	<span class="keyword">case</span> OLEN, OCAP:</span><br><span class="line">		<span class="keyword">switch</span> &#123;</span><br><span class="line">		<span class="keyword">case</span> n.Left.Type.IsSlice():</span><br><span class="line">			op := ssa.OpSliceLen</span><br><span class="line">			<span class="keyword">if</span> n.Op == OCAP &#123;</span><br><span class="line">				op = ssa.OpSliceCap</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">return</span> s.newValue1(op, types.Types[TINT], s.expr(n.Left))</span><br><span class="line">		...</span><br><span class="line">		&#125;</span><br><span class="line">	...</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>访问切片中的字段可能会触发 <code>decompose builtin</code> 阶段的优化，<code>len(slice)</code> 或者 <code>cap(slice)</code> 在一些情况下会直接替换成切片的长度或者容量，不需要在运行时获取。</p>
+<p>除了获取切片的长度和容量之外，访问切片中元素使用的 <code>OINDEX</code> 操作也会在中间代码生成期间转换成对地址的直接访问：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *state)</span> <span class="title">expr</span><span class="params">(n *Node)</span> *<span class="title">ssa</span>.<span class="title">Value</span></span> &#123;</span><br><span class="line">	<span class="keyword">switch</span> n.Op &#123;</span><br><span class="line">	<span class="keyword">case</span> OINDEX:</span><br><span class="line">		<span class="keyword">switch</span> &#123;</span><br><span class="line">		<span class="keyword">case</span> n.Left.Type.IsSlice():</span><br><span class="line">			p := s.addr(n, <span class="literal">false</span>)</span><br><span class="line">			<span class="keyword">return</span> s.load(n.Left.Type.Elem(), p)</span><br><span class="line">		...</span><br><span class="line">		&#125;</span><br><span class="line">	...</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="5、追加和扩容"><a href="#5、追加和扩容" class="headerlink" title="5、追加和扩容"></a>5、追加和扩容</h2><h3 id="当切片的容量充足时"><a href="#当切片的容量充足时" class="headerlink" title="当切片的容量充足时"></a>当切片的容量充足时</h3><p>使用 <code>append</code> 方法追加元素</p>
+<h3 id="当切片的容量不足时"><a href="#当切片的容量不足时" class="headerlink" title="当切片的容量不足时"></a>当切片的容量不足时</h3><ul>
+<li>如果期望容量的当前容量的两倍则用期望容量。</li>
+<li>如果当前切片的长度小于等于1024容量变为2倍。</li>
+<li>如果当前切片的长度大于1024每次变为以前的1.25倍。</li>
+</ul>
+<p>上面的规则仅会确定切片的大致容量，后面还会根据切片中的元素大小进行内存对齐，当数组中元素所占的字节大小为 1、8 或者 2 的倍数时，运行时会进行对齐内存，这样可以提高内存分配效率并减少碎片，所以容量一般是大于等于2倍或1.25倍。最后 <code>runtime.growslice</code> 最终会返回一个新的切片。 </p>
+<h2 id="6、拷贝"><a href="#6、拷贝" class="headerlink" title="6、拷贝"></a>6、拷贝</h2><p>当我们使用 <code>copy(a, b)</code> 的形式对切片进行拷贝时，分为编译期拷贝和运行时拷贝，两种方式最终都调用<code>runtime.memmove</code> 方法将整块内存的值拷贝到目标内存区域中。<code>runtime.memmove</code> 能够提供比一次拷贝更好的性能，但是在拷贝内存时仍然会占用非常多资源。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/09/05/hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/" rel="next" title="GitHub+Hexo 快速搭建个人博客">
+                <i class="fa fa-chevron-left"></i> GitHub+Hexo 快速搭建个人博客
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div class="ds-thread" data-thread-key="2021/09/07/slice/"
+           data-title="slice" data-url="http://example.com/2021/09/07/slice/">
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%87%E7%89%87%EF%BC%88slice%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">切片（slice）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81%E5%9F%BA%E7%A1%80%E7%94%A8%E6%B3%95"><span class="nav-number">1.1.</span> <span class="nav-text">1、基础用法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">2、数据结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">1.3.</span> <span class="nav-text">3、初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%E3%80%81%E8%AE%BF%E9%97%AE%E5%85%83%E7%B4%A0"><span class="nav-number">1.4.</span> <span class="nav-text">4、访问元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5%E3%80%81%E8%BF%BD%E5%8A%A0%E5%92%8C%E6%89%A9%E5%AE%B9"><span class="nav-number">1.5.</span> <span class="nav-text">5、追加和扩容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%93%E5%88%87%E7%89%87%E7%9A%84%E5%AE%B9%E9%87%8F%E5%85%85%E8%B6%B3%E6%97%B6"><span class="nav-number">1.5.1.</span> <span class="nav-text">当切片的容量充足时</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BD%93%E5%88%87%E7%89%87%E7%9A%84%E5%AE%B9%E9%87%8F%E4%B8%8D%E8%B6%B3%E6%97%B6"><span class="nav-number">1.5.2.</span> <span class="nav-text">当切片的容量不足时</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6%E3%80%81%E6%8B%B7%E8%B4%9D"><span class="nav-number">1.6.</span> <span class="nav-text">6、拷贝</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Mr Wang</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"坨坨"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
