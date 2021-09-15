@@ -339,54 +339,14 @@
 
       
         
-          
-            <h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><p>让我们来看一下map的数据结构，其中 <code>runtime.hmap</code> 是最核心的结构体：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> hmap <span class="keyword">struct</span> &#123;</span><br><span class="line">	count     <span class="keyword">int</span></span><br><span class="line">	flags     <span class="keyword">uint8</span></span><br><span class="line">	B         <span class="keyword">uint8</span></span><br><span class="line">	noverflow <span class="keyword">uint16</span></span><br><span class="line">	hash0     <span class="keyword">uint32</span></span><br><span class="line"></span><br><span class="line">	buckets    unsafe.Pointer</span><br><span class="line">	oldbuckets unsafe.Pointer</span><br><span class="line">	nevacuate  <span class="keyword">uintptr</span></span><br><span class="line"></span><br><span class="line">	extra *mapextra</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> mapextra <span class="keyword">struct</span> &#123;</span><br><span class="line">	overflow    *[]*bmap</span><br><span class="line">	oldoverflow *[]*bmap</span><br><span class="line">	nextOverflow *bmap</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>1、 <code>count</code> 表示当前哈希表中的元素数量<br>2、 <code>B</code> 表示当前哈希表拥有的 <code>buckets</code> 数量，因为哈希表中的桶的数量都是2的倍数，所以该字段存储的是对数，即<code>len(buckets) = 2^B</code><br>3、 <code>hash0</code> 是哈希种子，为计算哈希值时引入随机性，这个值在创建哈希表时确定。<br>4、 <code>oldbuckets</code> 是哈希表在扩容时保存之前的 <code>buckets</code> ,它的大小为当前 <code>buckets</code> 的一半</p>
-<p><img src="https://img.draveness.me/2020-10-18-16030322432679/hmap-and-buckets.png" alt="avatar"></p>
-<p>如上图所示哈希表 <code>runtime.hmap</code> 中的 <code>buckets</code> 指向一个 <code>runtime.bmap</code> 切片，每一个 <code>runtime.bmap</code> 都能存储 8 个键值对，当哈希表中存储的数据过多，单个桶已经装满时就会使用 <code>extra.nextOverflow</code> 中桶存储溢出的数据。<br>上述两种不同的桶在内存中是连续存储的，我们在这里将它们分别称为正常桶和溢出桶，上图中黄色的 <code>runtime.bmap</code> 就是正常桶，绿色的 <code>runtime.bmap</code> 是溢出桶。<br>桶的结构体 <code>runtime.bmap</code> 在 <code>Go</code> 语言源代码中的定义只包含一个简单的 <code>tophash</code> 字段，<code>tophash</code> 存储了键的哈希的高 8 位，通过比较不同键的哈希的高 8 位可以减少访问键值对次数以提高性能：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> bmap <span class="keyword">struct</span> &#123;</span><br><span class="line">	tophash [bucketCnt]<span class="keyword">uint8</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>在运行期间，<code>runtime.bmap</code> 结构体其实不止包含 <code>tophash</code> 字段，因为哈希表中可能存储不同类型的键值对，而且 <code>Go</code> 语言也不支持泛型，所以键值对占据的内存空间大小只能在编译时进行推导。<code>runtime.bmap</code> 中的其他字段在运行时也都是通过计算内存地址的方式访问的，所以它的定义中就不包含这些字段，不过我们能根据编译期间的 <code>cmd/compile/internal/gc.bmap</code> 函数重建它的结构：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> bmap <span class="keyword">struct</span> &#123;</span><br><span class="line">    topbits  [<span class="number">8</span>]<span class="keyword">uint8</span></span><br><span class="line">    keys     [<span class="number">8</span>]keytype</span><br><span class="line">    values   [<span class="number">8</span>]valuetype</span><br><span class="line">    pad      <span class="keyword">uintptr</span></span><br><span class="line">    overflow <span class="keyword">uintptr</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>随着哈希表存储的数据逐渐增多，我们会扩容哈希表或者使用额外的桶存储溢出的数据，不会让单个桶中的数据超过 8 个，不过溢出桶只是临时的解决方案，创建过多的溢出桶最终也会导致哈希的扩容。</p>
-<h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><ul>
-<li><p>字面量： </p>
-</li>
-<li><p>运行时：</p>
-</li>
-</ul>
-<h2 id="哈希冲突"><a href="#哈希冲突" class="headerlink" title="哈希冲突"></a>哈希冲突</h2><p>当有两个或以上数量的键被哈希到了同一个bucket时，我们称这些键发生了冲突。Go使用链地址法来解决键冲突。<br>由于每个bucket可以存放8个键值对，所以同一个bucket存放超过8个键值对时就会再创建一个键值对，用类似链表的方式将bucket连接起来。<br>下图展示产生冲突后的map：</p>
-<p>bucket数据结构指示下一个bucket的指针称为overflow bucket，意为当前bucket盛不下而溢出的部分。事实上哈希冲突并不是好事情，它降低了存取效率，好的哈希算法可以保证哈希值的随机性，但冲突过多也是要控制的。</p>
-<h2 id="读写操作"><a href="#读写操作" class="headerlink" title="读写操作"></a>读写操作</h2><h3 id="访问"><a href="#访问" class="headerlink" title="访问"></a>访问</h3><p>查找过程可以分为以下几步</p>
-<ul>
-<li>根据 <code>key</code> 计算出哈希值</li>
-<li>取哈希值的低位与 <code>hmap.B</code> 取模来确定 <code>bucket</code> 的位置</li>
-<li>取哈希值的高位，在 <code>topbits</code> 数组中查询</li>
-<li>如果 <code>tophash[i]</code> 中存储的值与当前 <code>key</code> 的哈希值相等，则获取 <code>tophash[i]</code> 的 <code>key</code> 进行比较</li>
-<li>当前 <code>bucket</code> 中没找到，则依次从溢出桶中查找。<h3 id="写入"><a href="#写入" class="headerlink" title="写入"></a>写入</h3>写入过程可以分为以下几步</li>
-<li>根据 <code>key</code> 计算出哈希值</li>
-<li>取哈希值的低位与 <code>hmap.B</code> 取模来确定 <code>bucket</code> 的位置</li>
-<li>查找该 <code>key</code> 是否存在，如果存在则直接更新值</li>
-<li>如果不存在则从该 <code>bucket</code> 中寻找空余位置插入</li>
-<li>如果当前 <code>bucket</code> 没有空余位置，则会新建桶或会使用预先在 <code>overflow</code> 中创建好的桶来保存数据，新创建的桶不仅会被追加到已有桶的末尾，还会增加哈希表的 <code>overflow</code> 计数器<br>如果当前的 <code>map</code> 处于搬迁过程中，那么新元素会直接添加到新的 <code>bucket</code> 数组中，查找过程仍是从 <code>oldbuckets</code> 数组中开始。<h3 id="扩容"><a href="#扩容" class="headerlink" title="扩容"></a>扩容</h3><h4 id="扩容条件"><a href="#扩容条件" class="headerlink" title="扩容条件"></a>扩容条件</h4></li>
-<li>负载因子大于 6.5 时，即平均每个 <code>bucket</code> 存储的键值对达到 6.5 个以上</li>
-<li>overflow 的数量大于 2^15</li>
-</ul>
-<p>根据触发的条件不同扩容的方式分成两种，如果这次扩容是溢出的桶太多导致的，那么这次扩容就是等量扩容，等量扩容是一种特殊情况下发生的扩容，当我们持续向哈希中插入数据并将它们全部删除时，如果哈希表中的数据量没有超过阈值，就会不断积累溢出桶造成缓慢的内存泄漏。等量扩容通过复用已有的哈希扩容机制解决该问题，一旦哈希中出现了过多的溢出桶，它会创建新桶保存数据，垃圾回收会清理老的溢出桶并释放内存。如果是负载因子过大导致的，那么这次扩容就是增量扩容。会新建一个 <code>bucket</code> ,新的数组长度是原来的两倍，然后把旧数据搬迁到新 <code>bucket</code> 中。</p>
-<h4 id="增量扩容"><a href="#增量扩容" class="headerlink" title="增量扩容"></a>增量扩容</h4><ul>
-<li><p>hmap数据结构中的 <code>oldbuckets</code> 成员指身原 <code>buckets</code>，而 <code>buckets</code> 指向了新申请的 <code>bucket</code>。</p>
-</li>
-<li><p>新的键值对被插入新的bucket中。<br><img src="https://www.topgoer.cn/uploads/gozhuanjia/images/m_2f0122f26e5d66ca91e6820ace6b379b_r.png" alt="avatar"></p>
-</li>
-<li><p>后续对map的访问操作会触发迁移,每次访问会触发迁移动作，每次迁移 2 个<br><img src="https://www.topgoer.cn/uploads/gozhuanjia/images/m_b1178e0a3cea02c9386e5f5eaa6f99a6_r.png" alt="avatar"></p>
-</li>
-<li><p>当 <code>oldbuckets</code> 数组中的所有键值对搬迁完成后就可以安全释放 <code>oldbuckets</code> </p>
-<h4 id="等量扩容"><a href="#等量扩容" class="headerlink" title="等量扩容"></a>等量扩容</h4><p><img src="https://www.topgoer.cn/uploads/gozhuanjia/images/m_f3a5989c90204df9304d5ae246f3db72_r.png" alt="avatar"><br>上图可见，<code>overflow</code> 的 <code>bucket</code> 中大部分是空的，访问效率会很差。此时进行一次等量扩容，即 <code>buckets</code> 数量不变，经过重新组织后 <code>overflow</code> 的 <code>bucket</code> 数量会减少，即节省了空间又会提高访问效率。</p>
-<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><p>删除过程实际上就是先查元素，如果元素存在就把元素从相应的 <code>bucket</code> 中清除，如果不存在就什么也不做。</p>
-</li>
-</ul>
-
-          
+          <p>go 语言的奇妙之旅第二站：深入理解map。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/09/15/map/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
